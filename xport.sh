@@ -1,5 +1,5 @@
 #!/bin/bash
-if [ $# -gt 3 ]; then
+if [ $# -gt 2 ]; then
   mysqldump -u root -p "$1" > $1.sql
   scp $1.sql root@$2:$3
 else
