@@ -1,9 +1,9 @@
 #!/bin/bash
-if [ $# -gt 1 ]; then
+if [ $# -gt 3 ]; then
   mysqldump -u root -p "$1" > $1.sql
-  scp $1.sql root@nab-db8-prd01:/root/
+  scp $1.sql root@$2:$3
 else
-  echo "$0 <database>"
+  echo "$0 <database> <hostname> <path>"
   echo "enter local db password"
   echo "enter remote machine password"
 fi
