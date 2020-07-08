@@ -3,6 +3,7 @@ if [ $# -gt 0 ]; then
   mkdir $1
   cd $1
   t="schema_name"
+  # perhaps making a directory is the answer and then the scp can be executed only once.
   for db in $(mysql -u root -D information_schema -p < /root/export/xport.sql)
   do
     echo "$db"
