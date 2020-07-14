@@ -3,6 +3,9 @@ sysadmin stuff to export/import mysql databases
 
 specify databases to exclude in the sql file.
 
+transfer.sh
+- dump and restore databases in one script. should be executed from the new database server
+
 xport.sh
 - dump and scp sql files
 
