@@ -16,7 +16,7 @@ for folder, dirs, files in os.walk(baseDir):
         foundHostname = foundUser = foundPasword = False
         lineNum = 1
         for line in f:
-          if "nabdb.beacontec.com" in line:
+          if "dbserver" in line:
             #print("Found it!\n\t* Hostname: %s" % (line))
             output += "\t* Hostname: (line # " + str(lineNum) + ") " + line
             foundHostname = True
