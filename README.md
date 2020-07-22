@@ -12,6 +12,9 @@ xport.sh
 rstore.sh
 - restore sql files in specified directory
 
+constring.py
+- find all the connnection string data in .ini or .php files
+
 note:
 you will need to enter the mysql password or remove the option in the scripts
 the scp command could/should be rewritten to only be called once.
