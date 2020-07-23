@@ -50,25 +50,40 @@ for folder, dirs, files in os.walk(baseDir):
           if dbHost in line:
             #print("Found it!\n\t* Hostname: %s" % (line))
             output += "\t* Hostname: (line # " + str(lineNum) + ") " + line
-            foundHostname = True
+            tmp = line.split('=')
+            if len(tmp) > 1:
+              hKey = tmp[0].strip()
+              hVal = tmp[1].strip()
+              if "$" not in hVal:
+                output += "\t* New Hostname: '" + hKey + "=" + hVal + "'\n"
+                foundHostname = True
+            else:
+              output += "\t* could not split the key and value..."
+            #foundHostname = True
           elif (foundHostname or foundPasword) and "user" in line:
             #print("\t* Username: %s" % (line))
-            output += "\t* Username: (line # " + str(lineNum) + ") " + line
+            #output += "\t* Username: (line # " + str(lineNum) + ") " + line
             if len(line.split('=')) > 1:
               up['username'] = line.split('=')[1].strip().replace('"', '').replace("'", "").replace(";", "")
+              if "$" not in up['username']:
+                output += "\t* Username: (line # " + str(lineNum) + ") " + line.split('=')[0] + "=" + up['username'] + "\n"
+                foundUser = True
             else:
               #up['username'] = line
               up['username'] = ''
-            foundUser = True
+            #foundUser = True
           elif (foundHostname or foundUser) and "pass" in line:
             #print("\t* Password: %s" % (line))
-            output += "\t* Password: (line # " + str(lineNum) + ") " + line
+            #output += "\t* Password: (line # " + str(lineNum) + ") " + line
             if len(line.split('=')) > 1:
               up['password'] = line.split('=')[1].strip().replace('"', '').replace("'", "").replace(";", "")
+              if "$" not in up['password']:
+                output += "\t* Password: (line # " + str(lineNum) + ") " + line.split('=')[0] + "=" + up['password'] + "\n"
+                foundPasword = True
             else:
               #up['password'] = line
               up['password'] = ''
-            foundPasword = True
+            #foundPasword = True
           # else:
           #   # i think we will get an error if we leave an empty else block...
           lineNum += 1
