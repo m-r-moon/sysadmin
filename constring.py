@@ -3,16 +3,35 @@
 import argparse
 import os
 
+def apBool(value):
+  if isinstance(value, bool):
+    return value
+  if value.lower() in ('yes', 'y', 'Y', 'true', 'True', 't', 'T', '1'):
+    return True
+  elif value.lower() in ('no', 'n', 'N', 'false', 'False', 'f', 'F', '0'):
+    return False
+  else:
+    raise argparse.ArgumentTypeError('Boolean expected.')
+
 parser = argparse.ArgumentParser(description='Extract connection string data.')
 parser.add_argument('dir', type=str, help='directory to start looking')
 parser.add_argument('dbhost', type=str, help='database hostname')
+parser.add_argument('generate', type=apBool, nargs='?', const=True, default=False, help='generate user create query')
 
 args = parser.parse_args()
 
 baseDir = args.dir
 dbHost = args.dbhost
+
+if args.generate:
+  genUsers = args.generate
+else:
+  genUsers = False
+
 #baseDir = os.getcwd()
 print("Current directory: %s" % (baseDir))
+
+print("genUsers : %s" % genUsers)
 
 upList = []
 
@@ -77,38 +96,15 @@ for folder, dirs, files in os.walk(baseDir):
               upList.append(up)
           print(output)
 
-with open('/root/mysql-users.txt', 'w') as f:
-  tmpList = []
-  for up in upList:
-    #print(up['username'] + " | " + up['password'])
-    #print(up)
-    if up['username'] not in tmpList:
-      tmpList.append(up['username'])
-      f.write(up['username'])
-      f.write(" ")
-      f.write(up['password'])
-      f.write("\n")
-    # for k in up:
-    #   if k['username'] not in tmpList:
-      # if k == 'username':
-      #   if up['username'] not in tmpList:
-      #     tmpList.append(up[k])
-      #     f.write(up[k])
-      #     f.write(" ")
-      #     f.write(up['password'])
-      # else:
-      #   f.write(up[k])
-    #f.write(up)
-    # f.write("\n")
+if genUsers:
+  with open('/root/mysql-users.sql', 'w') as f:
+    tmpList = []
+    for up in upList:
+      if up['username'] not in tmpList:
+        tmpList.append(up['username'])
+        f.write("CREATE USER '" + up['username'] + "'@'%' IDENTIFIED BY '" + up['password'] + "';\n")
+        f.write("GRANT ALL PRIVILEGES ON *.* TO '" + up['username'] + "'@'%';\n")
+      
+    f.write("FLUSH PRIVILEGES;")
 
 print("Done.\n")
-
-    # if file.endswith('.ini') and file.endswith('.php') and not file.endswith('.py'):
-    #   filePath = os.path.join(folder, file)
-    #   with open(filePath, 'r') as f:
-    #     for line in f:
-    #       if "nabdb.beacontec.com" in line:
-    #         print(filePath)
-    #         break
-
-#exit()
