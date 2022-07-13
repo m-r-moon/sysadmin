@@ -18,3 +18,8 @@ constring.py
 note:
 you will need to enter the mysql password or remove the option in the scripts
 the scp command could/should be rewritten to only be called once.
+
+reboot crontab setup for 3 am on July 4:
+```
+echo "0 3 4 7 * root shutdown -r now" >> /etc/crontab
+```
